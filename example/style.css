@@ -1,0 +1,12 @@
+html, body, #main {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.my-ptr .ptr-content {
+  background: white;
+  padding: 8px;
+}

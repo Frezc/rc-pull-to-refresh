@@ -1,0 +1,25 @@
+.pull-to-refresh {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.pull-to-refresh .ptr-header {
+  position: absolute;
+  width: 100%;
+  transition: top .4s;
+}
+
+.pull-to-refresh .ptr-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow-y: auto;
+  transition: top .4s;
+}
+
+.disableTrans {
+  transition: none !important;
+}
