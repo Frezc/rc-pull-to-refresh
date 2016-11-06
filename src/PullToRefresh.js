@@ -47,6 +47,8 @@ class PullToRefresh extends Component {
       }), () => {
         this.lastY = touch.pageY;
       })
+    } else {
+      this.lastY = touch.pageY;
     }
   };
 
@@ -82,14 +84,21 @@ class PullToRefresh extends Component {
       >
         <div
           className={`ptr-header ${disableTrans ? 'disableTrans' : ''}`}
-          style={{ top: displayOffset - header.height }}
+          style={{
+            transform: `translate3d(0,${displayOffset - header.height}px,0)`,
+            WebkitTransform: `translate3d(0,${displayOffset - header.height}px,0)`
+          }}
         >
           {h}
         </div>
         <div
           className={`ptr-content ${disableTrans ? 'disableTrans' : ''}`}
           ref="content"
-          style={{ top: displayOffset, overflowY: pullOffset > 0 ? 'hidden' : 'auto' }}
+          style={{
+            transform: `translate3d(0,${displayOffset}px,0)`,
+            WebkitTransform: `translate3d(0,${displayOffset}px,0)`,
+            overflowY: pullOffset > 0 ? 'hidden' : 'auto'
+          }}
         >
           {children}
         </div>

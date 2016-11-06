@@ -7,7 +7,7 @@
 .pull-to-refresh .ptr-header {
   position: absolute;
   width: 100%;
-  transition: top .4s;
+  transition: transform .4s;
 }
 
 .pull-to-refresh .ptr-content {
@@ -17,7 +17,7 @@
   bottom: 0;
   right: 0;
   overflow-y: auto;
-  transition: top .4s;
+  transition: transform .4s;
 }
 
 .disableTrans {

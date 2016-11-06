@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { render } from 'react-dom';
-import SimplePTR from '../lib/SimplePTR';
+import SimplePTR from '../src/SimplePTR';
 
 class Page extends React.Component {
 

@@ -34,7 +34,6 @@ class SimplePTR extends Component {
     }
   };
 
-
   render() {
     const { loading, onRefresh, children, className, style, resistance } = this.props
 
