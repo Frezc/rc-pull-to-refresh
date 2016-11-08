@@ -1,13 +1,12 @@
 {
   "name": "rc-pull-to-refresh",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "A pull to refresh component base on react.",
   "main": "lib/PullToRefresh.js",
   "scripts": {
     "dev": "webpack-dev-server --config=./example/webpack.config.js --content-base example/ --port=8080 --hot --inline",
     "build": "babel src --out-dir lib --copy-files",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "index": "babel index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "react",

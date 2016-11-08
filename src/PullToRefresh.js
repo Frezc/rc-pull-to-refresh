@@ -34,6 +34,16 @@ class PullToRefresh extends Component {
 
   lastY = 0;
 
+  getTranslate(y) {
+    return {
+      transform: `translate3d(0,${y}px,0)`,
+      WebkitTransform: `translate3d(0,${y}px,0)`,
+      MozTransform: `translate3d(0,${y}px,0)`,
+      MsTransform: `translate3d(0,${y}px,0)`,
+      OTransform: `translate3d(0,${y}px,0)`
+    }
+  }
+
   handleTouchStart = e => {
     if (this.props.loading) return;
     this.lastY = e.changedTouches[0].pageY;
@@ -41,15 +51,16 @@ class PullToRefresh extends Component {
   };
 
   handleTouchMove = e => {
+    if (this.state.pullOffset > 0) e.preventDefault();
     if (this.props.loading) return;
     const contentEl = this.refs.content;
     const touch = e.changedTouches[0];
     if (contentEl.scrollTop <= 0) {
-      this.setState((prevState) => ({
-        pullOffset: Math.max(prevState.pullOffset + (touch.pageY - this.lastY) * (1 / this.props.resistance), 0)
-      }), () => {
-        this.lastY = touch.pageY;
-      })
+      const offset = (touch.pageY - this.lastY) * (1 / this.props.resistance);
+      this.setState({
+        pullOffset: Math.max(this.state.pullOffset + offset, 0)
+      });
+      this.lastY = touch.pageY;
     } else {
       this.lastY = touch.pageY;
     }
@@ -77,41 +88,36 @@ class PullToRefresh extends Component {
     }
   };
 
-  render () {
+  render() {
     const { children, className, style, header, distanceToRefresh, loading, onScroll } = this.props;
     const { pullOffset, disableTrans } = this.state;
-    const displayOffset = loading ? header.height: pullOffset;
+    const displayOffset = loading ? header.height : pullOffset;
 
     const h = header.render({
-        loading,
-        offset: pullOffset,
-        canRefresh: pullOffset >= distanceToRefresh
+      loading,
+      offset: pullOffset,
+      canRefresh: pullOffset >= distanceToRefresh
     });
     return (
       <div
-        className={`pull-to-refresh ${className}`}
-        style={style}
+        className={`pull-to-refresh ${disableTrans ? 'disableTrans' : ''} ${className}`}
+        style={{
+          ...style,
+          ...this.getTranslate(displayOffset)
+        }}
         onTouchStart={this.handleTouchStart}
         onTouchMove={this.handleTouchMove}
         onTouchEnd={this.handleTouchEnd}
       >
         <div
-          className={`ptr-header ${disableTrans ? 'disableTrans' : ''}`}
-          style={{
-            transform: `translate3d(0,${displayOffset - header.height}px,0)`,
-            WebkitTransform: `translate3d(0,${displayOffset - header.height}px,0)`
-          }}
+          className="ptr-header"
+          style={this.getTranslate(-header.height)}
         >
           {h}
         </div>
         <div
-          className={`ptr-content ${disableTrans ? 'disableTrans' : ''}`}
+          className="ptr-content"
           ref="content"
-          style={{
-            transform: `translate3d(0,${displayOffset}px,0)`,
-            WebkitTransform: `translate3d(0,${displayOffset}px,0)`,
-            overflowY: pullOffset > 0 ? 'hidden' : 'auto'
-          }}
           onScroll={this.handleScroll}
         >
           {children}
