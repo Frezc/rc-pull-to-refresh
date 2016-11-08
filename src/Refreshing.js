@@ -1,4 +1,5 @@
 import React from 'react';
+import './refreshing.css';
 
 function Refreshing({ style, className }) {
   return (

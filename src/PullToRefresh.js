@@ -14,14 +14,17 @@ class PullToRefresh extends Component {
     }).isRequired,
     loading: PropTypes.bool.isRequired,
     resistance: PropTypes.number,
-    onRefresh: PropTypes.func
+    onRefresh: PropTypes.func.isRequired,
+    onEndReachedThreshold: PropTypes.number,
+    onEndReached: PropTypes.func
   };
 
   static defaultProps = {
     className: '',
     style: {},
     distanceToRefresh: 60,
-    resistance: 2.5
+    resistance: 2.5,
+    onEndReachedThreshold: 0
   };
 
   state = {
@@ -64,8 +67,18 @@ class PullToRefresh extends Component {
     })
   };
 
+  handleScroll = e => {
+    const { onEndReachedThreshold, onEndReached } = this.props;
+    if (onEndReached) {
+      const { scrollHeight, clientHeight, scrollTop } = e.target;
+      if (Math.round(scrollTop) + Math.round(clientHeight) + onEndReachedThreshold >= Math.round(scrollHeight)) {
+        onEndReached();
+      }
+    }
+  };
+
   render () {
-    const { children, className, style, header, distanceToRefresh, loading } = this.props;
+    const { children, className, style, header, distanceToRefresh, loading, onScroll } = this.props;
     const { pullOffset, disableTrans } = this.state;
     const displayOffset = loading ? header.height: pullOffset;
 
@@ -99,6 +112,7 @@ class PullToRefresh extends Component {
             WebkitTransform: `translate3d(0,${displayOffset}px,0)`,
             overflowY: pullOffset > 0 ? 'hidden' : 'auto'
           }}
+          onScroll={this.handleScroll}
         >
           {children}
         </div>

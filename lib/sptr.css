@@ -15,18 +15,3 @@
   box-sizing: border-box;
   padding-top: 16px;
 }
-
-@keyframes spin {
-  to {
-    transform: rotate(0deg);
-  }
-  from {
-    transform: rotate(360deg);
-  }
-}
-
-.refreshing {
-  width: 30px;
-  height: 30px;
-  animation: spin 2s infinite linear;
-}

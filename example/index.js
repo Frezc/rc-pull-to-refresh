@@ -10,11 +10,13 @@ class Page extends React.Component {
   state = {
     loading: false,
     dataSource: this.randomData()
-  }
+  };
 
-  randomData() {
+  moreLoading = false;
+
+  randomData(number = 50) {
     const ds = [];
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < number; i++) {
       ds.push(Math.random());
     }
     return ds;
@@ -30,6 +32,15 @@ class Page extends React.Component {
     }), 2000);
   };
 
+  addMore = () => {
+    if (!this.moreLoading) {
+      this.moreLoading = true;
+      setTimeout(() => this.setState((prevState) => ({
+        dataSource: prevState.dataSource.concat(this.randomData())
+      }), () => this.moreLoading = false));
+    }
+  };
+
   render () {
     const { loading, dataSource } = this.state;
 
@@ -38,6 +49,8 @@ class Page extends React.Component {
         className="my-ptr"
         loading={loading}
         onRefresh={this.refresh}
+        onEndReached={this.addMore}
+        onEndReachedThreshold={60}
       >
         {dataSource.map((data, index) =>
           <div key={index} style={{ height: 48 }}>{data}</div>

@@ -9,11 +9,14 @@ const Component = React.PureComponent || React.Component;
 class SimplePTR extends Component {
 
   static propTypes = {
-    loading: PropTypes.bool,
-    onRefresh: PropTypes.func
+    className: PropTypes.string,
+    style: PropTypes.object,
+    loading: PropTypes.bool.isRequired,
+    onRefresh: PropTypes.func.isRequired,
+    resistance: PropTypes.number,
+    onEndReachedThreshold: PropTypes.number,
+    onEndReached: PropTypes.func
   };
-
-  static defaultProps = {};
 
   renderHeader = ({ loading, canRefresh, offset }) => {
     if (loading) {
@@ -35,23 +38,18 @@ class SimplePTR extends Component {
   };
 
   render() {
-    const { loading, onRefresh, children, className, style, resistance } = this.props
+    const props = Object.assign({}, this.props, {
+      distanceToRefresh: 60,
+      header: {
+        height: 60,
+        render: this.renderHeader
+      }
+    });
 
     return (
       <PullToRefresh
-        className={className}
-        loading={loading}
-        style={style}
-        distanceToRefresh={60}
-        resistance={resistance}
-        header={{
-          height: 60,
-          render: this.renderHeader
-        }}
-        onRefresh={onRefresh}
-      >
-        {children}
-      </PullToRefresh>
+        {...props}
+      />
     )
   }
 }

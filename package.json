@@ -1,6 +1,6 @@
 {
   "name": "rc-pull-to-refresh",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A pull to refresh component base on react.",
   "main": "lib/PullToRefresh.js",
   "scripts": {

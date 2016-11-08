@@ -5,7 +5,7 @@ This is a pull to refresh component depend on react.
 ## Install
 
 ```
-npm i -S rc-pull-to-refresh@0.0.4
+npm i -S rc-pull-to-refresh@0.0.5
 ```
 
 ## Usage
@@ -13,24 +13,69 @@ npm i -S rc-pull-to-refresh@0.0.4
 ### Use SimplePTR (see example)
 
 ```jsx
-import SimplePTR from 'rc-pull-to-refresh/lib/SimplePTR';
+import React from 'react';
+import { render } from 'react-dom';
+import SimplePTR from '../src/SimplePTR';
 
-// in component's render
-render() {
-  const { loading, dataSource } = this.state;
+class Page extends React.Component {
 
-  return (
-    <SimplePTR
-      className="my-ptr"
-      loading={loading}
-      onRefresh={this.refresh}
-    >
-      {dataSource.map((data, index) =>
-        <div key={index} style={{ height: 48 }}>{data}</div>
-      )}
-    </SimplePTR>
-  );
+  state = {
+    loading: false,
+    dataSource: this.randomData()
+  };
+
+  moreLoading = false;
+
+  randomData(number = 50) {
+    const ds = [];
+    for (var i = 0; i < number; i++) {
+      ds.push(Math.random());
+    }
+    return ds;
+  }
+
+  refresh = () => {
+    this.setState({
+      loading: true
+    });
+    setTimeout(() => this.setState({
+      loading: false,
+      dataSource: this.randomData()
+    }), 2000);
+  };
+
+  addMore = () => {
+    if (!this.moreLoading) {
+      this.moreLoading = true;
+      setTimeout(() => this.setState((prevState) => ({
+        dataSource: prevState.dataSource.concat(this.randomData())
+      }), () => this.moreLoading = false));
+    }
+  };
+
+  render () {
+    const { loading, dataSource } = this.state;
+
+    return (
+      <SimplePTR
+        className="my-ptr"
+        loading={loading}
+        onRefresh={this.refresh}
+        onEndReached={this.addMore}
+        onEndReachedThreshold={60}
+      >
+        {dataSource.map((data, index) =>
+          <div key={index} style={{ height: 48 }}>{data}</div>
+        )}
+      </SimplePTR>
+    )
+  }
 }
+
+render(
+  <Page />,
+  document.getElementById('main')
+);
 ```
 
 ### Use PullToRefresh (if you want a custom header)
@@ -59,6 +104,14 @@ render() {
 }
 ```
 
+### [Other] Use Refreshing icon
+
+```
+import Refreshing from 'rc-pull-to-refresh/lib/Refreshing';
+
+<Refreshing style={{ width: 50, height: 50 }} />
+```
+
 ## API
 
 - onRefresh
@@ -73,6 +126,12 @@ render() {
     - string
 - style
     - object
+- onEndReached
+    - func
+    - Called when all rows have been rendered and the list has been scrolled to within onEndReachedThreshold of the bottom.
+- onEndReachedThreshold
+    - number
+    - Threshold in pixels for calling onEndReached.
 - distanceToRefresh
     - PullToRefresh only
     - number
