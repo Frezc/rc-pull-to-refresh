@@ -5,7 +5,7 @@ This is a pull to refresh component depend on react.
 ## Install
 
 ```
-npm i -S rc-pull-to-refresh@0.1.0
+npm i -S rc-pull-to-refresh@0.1.1
 ```
 
 ## Usage

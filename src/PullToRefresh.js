@@ -33,6 +33,7 @@ class PullToRefresh extends Component {
   };
 
   lastY = 0;
+  pulling = false;
 
   getTranslate(y) {
     return {
@@ -46,8 +47,12 @@ class PullToRefresh extends Component {
 
   handleTouchStart = e => {
     if (this.props.loading) return;
+    const contentEl = this.refs.content;
+    if (contentEl.scrollTop < 1) {
+      this.setState({ disableTrans: true });
+      this.pulling = true;
+    }
     this.lastY = e.changedTouches[0].pageY;
-    this.setState({ disableTrans: true });
   };
 
   handleTouchMove = e => {
@@ -55,15 +60,14 @@ class PullToRefresh extends Component {
     if (this.props.loading) return;
     const contentEl = this.refs.content;
     const touch = e.changedTouches[0];
-    if (contentEl.scrollTop <= 0) {
+    if (contentEl.scrollTop >= 1) this.pulling = false;
+    if (this.pulling) {
       const offset = (touch.pageY - this.lastY) * (1 / this.props.resistance);
       this.setState({
         pullOffset: Math.max(this.state.pullOffset + offset, 0)
       });
-      this.lastY = touch.pageY;
-    } else {
-      this.lastY = touch.pageY;
     }
+    this.lastY = touch.pageY;
   };
 
   handleTouchEnd = e => {
@@ -72,10 +76,11 @@ class PullToRefresh extends Component {
     if (this.state.pullOffset >= distanceToRefresh) {
       onRefresh && onRefresh();
     }
+    this.pulling = false;
     this.setState({
       pullOffset: 0,
       disableTrans: false
-    })
+    });
   };
 
   handleScroll = e => {
