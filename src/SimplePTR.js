@@ -38,17 +38,14 @@ class SimplePTR extends Component {
   };
 
   render() {
-    const props = Object.assign({}, this.props, {
-      distanceToRefresh: 60,
-      header: {
-        height: 60,
-        render: this.renderHeader
-      }
-    });
-
     return (
       <PullToRefresh
-        {...props}
+        {...this.props}
+        distanceToRefresh={60}
+        header={{
+          height: 60,
+          render: this.renderHeader
+        }}
       />
     )
   }
